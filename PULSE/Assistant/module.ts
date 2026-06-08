@@ -169,9 +169,14 @@ function getPersonality(): Personality | null {
   return {
     base_description: yaml.personality?.base_description || "",
     traits: yaml.personality?.traits || {},
-    anchors: yaml.personality?.anchors,
-    preferences: yaml.personality?.preferences,
-    companion: yaml.personality?.companion,
+    anchors: yaml.personality?.anchors || [],
+    preferences: yaml.personality?.preferences || {
+      what_i_love: [],
+      what_i_dislike: [],
+      working_style: [],
+      intellectual_interests: [],
+    },
+    companion: yaml.personality?.companion || null,
     relationship: {
       dynamic: yaml.relationship?.dynamic || "peers",
       interaction_style: yaml.relationship?.framing || "Direct and clear",
