@@ -320,7 +320,19 @@ export async function handleAssistantRequest(req: Request, pathname: string): Pr
       return Response.json({ entries: [] })
     }
     const diaryPath = join(daDir, "diary.jsonl")
-    const entries = parseJSONL<any>(diaryPath)
+    const rawEntries = parseJSONL<any>(diaryPath)
+
+    // Transform to frontend's expected DiaryEntry format
+    const entries = rawEntries.map(e => ({
+      date: e.timestamp?.slice(0, 10) || new Date().toISOString().slice(0, 10),
+      interaction_count: 1,
+      topics: e.session_id ? [e.session_id] : [],
+      mood: "neutral" as const,
+      avg_rating: 5,
+      notable_moments: e.reflection ? [e.reflection.slice(0, 100)] : [],
+      learning: e.reflection || null,
+    }))
+
     return Response.json({ entries })
   }
 
